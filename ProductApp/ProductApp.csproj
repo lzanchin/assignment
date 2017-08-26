@@ -87,13 +87,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DiffController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Domain\JsonResponse.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\JsonInput.cs" />
-    <Compile Include="Models\Product.cs" />
+    <Compile Include="Domain\JsonInput.cs" />
+    <Compile Include="Domain\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\Database\Database.cs" />
+    <Compile Include="Repository\ProductsLeftRepository.cs" />
+    <Compile Include="Repository\ProductsRightRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

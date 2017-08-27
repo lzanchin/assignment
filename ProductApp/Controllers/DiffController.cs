@@ -1,4 +1,5 @@
-﻿using ProductApp.Models;
+﻿using ProductApp.Domain;
+using ProductApp.Models;
 using ProductApp.Repository;
 using System;
 using System.Collections.Generic;
@@ -11,36 +12,58 @@ namespace ProductApp.Controllers
 {
     public class DiffController : ApiController
     {
-        //List<Product> products = new List<Product>
-        //{
-        //    new Product { Id = 1, Name = "Tomato Soup", Category = "Groceries", Price = 1 },
-        //    new Product { Id = 2, Name = "Yo-yo", Category = "Toys", Price = 3.75M },
-        //    new Product { Id = 3, Name = "Hammer", Category = "Hardware", Price = 16.99M }
-        //};
+        //Initialize the repositories for both left and right
+        LeftRepository repositoryLeft = new LeftRepository();
+        RightRepository repositoryRight = new RightRepository();
 
-        ProductsLeftRepository repositoryLeft = new ProductsLeftRepository();
-        ProductsRightRepository repositoryRight = new ProductsRightRepository();
-
+        /// <summary>
+        /// Action to handle the data being sent to the Right Endpoint.
+        /// The endpoint will receive and save the data in the database.
+        /// Same behavior for both endpoints
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Right(int id, [FromBody] Product product)
+        public IHttpActionResult Right(int id, HttpRequestMessage value)
         {
+            var base64Text = value.Content.ReadAsStringAsync().Result;
+            Base64Data product = new Base64Data();
             product.Id = id;
+            product.Base64Value = base64Text;
             repositoryRight.Add(product);
             return Ok("Data saved");
         }
         [HttpPost]
-        public IHttpActionResult Left(int id, [FromBody] Product product)
+        public IHttpActionResult Left(int id, HttpRequestMessage value)
         {
+            var base64Text = value.Content.ReadAsStringAsync().Result;
+            Base64Data product = new Base64Data();
             product.Id = id;
+            product.Base64Value = base64Text;
             repositoryLeft.Add(product);
             return Ok("Data saved");
         }
-        public IHttpActionResult GetAllProducts()
+        /// <summary>
+        /// Endpoint that will actually compare right and left based in the id sent
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult Diff(int id)
         {
-            JsonResponse response = new JsonResponse();
-            response.LeftList = repositoryLeft.GetAll();
-            response.RightList = repositoryRight.GetAll();
+            DiffService diff = new DiffService();
+            var response = diff.Compare(id);
             return Ok(response);
         }
+
+        //Todo - Try to implement a method to get all data
+        //public IHttpActionResult GetList()
+        //{
+        //    JsonLists response = new JsonLists();
+        //    response.LeftList = repositoryLeft.GetAll();
+        //    response.RightList = repositoryRight.GetAll();
+        //    return Ok(response);
+        //}
     }
 }

@@ -5,11 +5,9 @@ using System.Web;
 
 namespace ProductApp.Models
 {
-    public class Product
+    public class Base64Data
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Category { get; set; }
-        public double Price { get; set; }
+        public string Base64Value { get; set; }
     }
 }

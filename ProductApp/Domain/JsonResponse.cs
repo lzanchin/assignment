@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ProductApp.Models
+namespace ProductApp.Domain
 {
     public class JsonResponse
     {
-        public List<Product> LeftList { get; set; }
-        public List<Product> RightList { get; set; }
+        public int Id { get; set; }
+        public string Left { get; set; }
+        public string Right { get; set; }
+        public string Result { get; set; }
+        public List<string> Differences { get; set; } 
+
+        public JsonResponse()
+        {
+            Differences = new List<string>();
+        }
     }
 }

@@ -16,8 +16,10 @@ namespace ProductApp.Domain
             RightRepository rightRepository = new RightRepository();
             Base64Data leftData = leftRepository.GetById(id);
             Base64Data rightData = rightRepository.GetById(id);
-            response.Left = leftData.Base64Value;
-            response.Right = rightData.Base64Value;
+            if(leftData != null)
+                response.Left = leftData.Base64Value;
+            if(rightData != null)
+                response.Right = rightData.Base64Value;
             response.Id = id;
 
             //Validate if right or left data is present

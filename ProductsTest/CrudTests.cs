@@ -10,7 +10,7 @@ using ProductApp.Repository;
 namespace ProductsTest
 {
     [TestClass]
-    public class ProductsTest
+    public class CrudTests
     {
         private DiffController controller;
         private LeftRepository leftRepository;
@@ -31,25 +31,46 @@ namespace ProductsTest
         //    Assert.AreNotEqual(count, newCount);
 
         //}
+        //[TestMethod]
+        //public void GenerateBase64()
+        //{
+        //    var plainTextBytes = System.Text.Encoding.UTF8.GetBytes("teste1234");
+        //    var any = System.Convert.ToBase64String(plainTextBytes);
+        //}
+
         [TestMethod]
-        public void GenerateBase64()
+        public void CreateData()
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes("teste1234");
-            var any = System.Convert.ToBase64String(plainTextBytes);
+            int count = leftRepository.GetAll().Count;
+            leftRepository.Add(CreateBase64Data(count+1, "test"));
+            Assert.AreEqual(count+1, leftRepository.GetAll().Count);
+
         }
 
-        public void ApiShouldReturnItems()
+        [TestMethod]
+        public void ShouldNotExistById()
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:49591/v1/products/3/right");
-            request.Method = "GET";
-            request.ContentType = "text/plain; charset=utf-8";
-            var resp = request.GetResponse();
+            int id = leftRepository.GetAll().Count + 1;
+            Base64Data data = leftRepository.GetById(id);
+            Assert.IsNull(data);
+
         }
 
-        private List<Base64Data> GetLeftProducts()
+        [TestMethod]
+        public void ShouldEditData()
         {
-            return leftRepository.GetAll();
+            int count = leftRepository.GetAll().Count;
+            leftRepository.Add(CreateBase64Data(count + 1, "Test"));
+            Base64Data originalData = leftRepository.GetById(count + 1);
+            leftRepository.Edit(CreateBase64Data(count + 1, "Test1"));
+            Base64Data editedData = leftRepository.GetById(count + 1);
+
+            Assert.AreEqual(originalData.Id, editedData.Id);
+            Assert.AreNotEqual(originalData.Base64Value, editedData.Base64Value);
         }
+
+        //Non-Test Methods
+
         private Base64Data CreateBase64Data(int id, string value)
         {
             Base64Data newBase64Data = new Base64Data();
@@ -58,6 +79,19 @@ namespace ProductsTest
             newBase64Data.Base64Value = value;
             return newBase64Data;
         }
+
+        //public void ApiShouldReturnItems()
+        //{
+        //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:49591/v1/products/3/right");
+        //    request.Method = "GET";
+        //    request.ContentType = "text/plain; charset=utf-8";
+        //    var resp = request.GetResponse();
+        //}
+
+        //private List<Base64Data> GetLeftProducts()
+        //{
+        //    return leftRepository.GetAll();
+        //}
 
         //private void AddProductLeft(int id, Base64Data value)
         //{
